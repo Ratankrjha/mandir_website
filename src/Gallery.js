@@ -117,10 +117,13 @@ function Gallery() {
     if (e.key === 'ArrowRight') goToNext();
   };
 
-  React.useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImg, currentIndex]);
+React.useEffect(() => {
+  window.addEventListener('keydown', handleKeyDown);
+
+  return () => {
+    window.removeEventListener('keydown', handleKeyDown);
+  };
+}, [selectedImg, currentIndex, handleKeyDown]);
 
   return (
     <div className="gallery">
