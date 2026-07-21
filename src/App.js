@@ -337,26 +337,26 @@ function FestivalCountdown() {
   const festivalName = 'दुर्गा पूजा महोत्सव';
 
   React.useEffect(() => {
-  const calculateTimeLeft = () => {
-    const difference = nextFestival - new Date();
+    const calculateTimeLeft = () => {
+      const difference = nextFestival - new Date();
+      
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / 1000 / 60) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
+        
+        setTimeLeft({ days, hours, minutes, seconds });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
 
-    if (difference > 0) {
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((difference / 1000 / 60) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
 
-      setTimeLeft({ days, hours, minutes, seconds });
-    } else {
-      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-    }
-  };
-
-  calculateTimeLeft();
-  const timer = setInterval(calculateTimeLeft, 1000);
-
-  return () => clearInterval(timer);
-}, [nextFestival]);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <section className="festival-countdown">
@@ -891,19 +891,19 @@ function AccommodationPage() {
   );
 }
 
-// function FestivalsPage() {
-//   return (
-//     <div className="page">
-//       <h1>मुख्य पर्व आ उत्सव</h1>
-//       <ul className="bullet-list">
-//         <li>शारदीय दुर्गा पूजा – वर्षक सर्वाधिक भव्य उत्सव।</li>
-//         <li>महाशिवरात्रि – विशेष रुद्राभिषेक, रात्रि-जागरण आ भजन संध्या।</li>
-//         <li>राम नवमी, जन्माष्टमी, सरस्वती पूजा, बसंत पंचमी।</li>
-//         <li>नव वर्ष (हिन्दू नववर्ष) पर विशेष पूजा आ आशीर्वाद कार्यक्रम।</li>
-//       </ul>
-//     </div>
-//   );
-// }
+function FestivalsPage() {
+  return (
+    <div className="page">
+      <h1>मुख्य पर्व आ उत्सव</h1>
+      <ul className="bullet-list">
+        <li>शारदीय दुर्गा पूजा – वर्षक सर्वाधिक भव्य उत्सव।</li>
+        <li>महाशिवरात्रि – विशेष रुद्राभिषेक, रात्रि-जागरण आ भजन संध्या।</li>
+        <li>राम नवमी, जन्माष्टमी, सरस्वती पूजा, बसंत पंचमी।</li>
+        <li>नव वर्ष (हिन्दू नववर्ष) पर विशेष पूजा आ आशीर्वाद कार्यक्रम।</li>
+      </ul>
+    </div>
+  );
+}
 
 function DurgaPujaPage() {
   return (
