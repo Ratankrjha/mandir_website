@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 22526)
+Total output lines: 1819
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
@@ -166,37 +169,89 @@ function Header() {
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
+  const [autoplayBlocked, setAutoplayBlocked] = React.useState(false);
+  const [audioError, setAudioError] = React.useState(false);
+  const audioRef = React.useRef(null);
 
   React.useEffect(() => {
-    const audio = document.getElementById('durgaAudio');
-    
+    const audio = audioRef.current;
+    if (!audio) return undefined;
+
+    let waitingForInteraction = false;
     const updateTime = () => setCurrentTime(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
-    
+    const updateDuration = () => {
+      setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+    };
+    const handlePlay = () => {
+      setIsPlaying(true);
+      setAutoplayBlocked(false);
+      setAudioError(false);
+    };
+    const handlePause = () => setIsPlaying(false);
+    const handleError = () => {
+      setIsPlaying(false);
+      setAutoplayBlocked(false);
+      setAudioError(true);
+    };
+    function removeGestureListeners() {
+      document.removeEventListener('pointerdown', resumeAfterInteraction, true);
+      document.removeEventListener('keydown', resumeAfterInteraction, true);
+    }
+    function resumeAfterInteraction() {
+      if (!waitingForInteraction || !audio.paused) return;
+      waitingForInteraction = false;
+      removeGestureListeners();
+      audio.play().catch(() => {
+        setIsPlaying(false);
+        setAutoplayBlocked(true);
+      });
+    }
+
     audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('loadedmetadata', updateDuration);
-    
+    audio.addEventListener('durationchange', updateDuration);
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('ended', handlePause);
+    audio.addEventListener('error', handleError);
+
+    audio.play().catch(() => {
+      setIsPlaying(false);
+      setAutoplayBlocked(true);
+      waitingForInteraction = true;
+      document.addEventListener('pointerdown', resumeAfterInteraction, true);
+      document.addEventListener('keydown', resumeAfterInteraction, true);
+    });
+
     return () => {
+      removeGestureListeners();
       audio.removeEventListener('timeupdate', updateTime);
       audio.removeEventListener('loadedmetadata', updateDuration);
+      audio.removeEventListener('durationchange', updateDuration);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('ended', handlePause);
+      audio.removeEventListener('error', handleError);
     };
   }, []);
 
   const toggleAudio = () => {
-    const audio = document.getElementById('durgaAudio');
-    if (audio) {
-      if (isPlaying) {
-        audio.pause();
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio.play().catch(() => {
         setIsPlaying(false);
-      } else {
-        audio.play();
-        setIsPlaying(true);
-      }
+        setAutoplayBlocked(true);
+      });
+    } else {
+      audio.pause();
     }
   };
 
   const handleProgressChange = (e) => {
-    const audio = document.getElementById('durgaAudio');
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
     const newTime = (e.target.value / 100) * duration;
     audio.currentTime = newTime;
     setCurrentTime(newTime);
@@ -211,7 +266,13 @@ function Header() {
 
   return (
     <header className="site-header">
-      <audio id="durgaAudio" src={`${process.env.PUBLIC_URL}/Ya_Devi_Sarvbhuteshu___GODDESS_DURGA_STUTI___mantra_for_POSITIVE_ENERGY,_PROSPERITY___SUCCESS(48k).mp3`} />
+      <audio
+        id="durgaAudio"
+        ref={audioRef}
+        src={`${process.env.PUBLIC_URL}/Ya_Devi_Sarvbhuteshu___GODDESS_DURGA_STUTI___mantra_for_POSITIVE_ENERGY,_PROSPERITY___SUCCESS(48k).mp3`}
+        autoPlay
+        preload="metadata"
+      />
       <div className="top-bar">
         <div className="top-bar-text">
           दुर्गा महादेव स्थान, हुलास – सुपौल, मिथिला
@@ -244,13 +305,20 @@ function Header() {
             </div>
           )}
           <div className="brand-audio-section">
-            <button 
+            <button
               className="audio-toggle-btn"
+              type="button"
               onClick={toggleAudio}
-              aria-label="Play Durga Saptashati"
+              aria-label={isPlaying ? 'Pause temple music' : 'Play temple music'}
+              title={audioError ? 'The audio file could not be loaded' : autoplayBlocked ? 'Tap to start temple music' : isPlaying ? 'Pause temple music' : 'Play temple music'}
             >
-              {isPlaying ? '⏸️' : '🔊'}
+              {isPlaying ? '⏸️' : '▶️'}
             </button>
+            {(autoplayBlocked || audioError) && (
+              <span className="audio-status" role="status">
+                {audioError ? 'संगीत लोड नहीं हो पाया' : 'संगीत शुरू करने के लिए टैप करें'}
+              </span>
+            )}
             <div className="brand-text">
               <div className="brand-title">दुर्गा महादेव स्थान, हुलास</div>
               <div className="brand-subtitle">
@@ -850,190 +918,7 @@ function ShantiKalashForm() {
         </button>
         <p className="form-note">
           * आवेदन सबमिट करबाक बाद मन्दिर प्रबंधन टीम द्वारा प्रदान कएल गेल
-          मोबाइल नंबर पर संपर्क कएल जायत।
-        </p>
-      </form>
-
-      {submitted && (
-        <div className="form-confirm">
-          <h3>आवेदन प्राप्त भʼ गेल</h3>
-          <p>
-            धन्यवाद {form.name} जी, अहाँक शांति कलश संबंधी प्राथमिक आवेदन
-            सुरक्षित कएल गेल अछि।
-          </p>
-          <p>
-            मन्दिर प्रबंधन अहाँसँ शीघ्रहि संपर्क करैत।
-          </p>
-          <p>
-            <strong>संपर्क नंबर:</strong> +91-8825130710, +91-7549662532
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function AccommodationPage() {
-  return (
-    <div className="page">
-      <h1>आवास संबंधी सूचना</h1>
-      <p>
-        वर्तमानमे मन्दिरक स्वयं केर आवास गृह सीमित अछि। हुलास आ आसपासक
-        क्षेत्रमे निजी लॉज, धर्मशाला आ होटल उपलब्ध अछि, जतए श्रद्धालु
-        ठहरबाक व्यवस्था कऽ सकैत छथि।
-      </p>
-      <p>
-        नजदीकी मुख्य शहर – राघोपुर, सिमराही आ सुपौल मे समेत विभिन्न धर्मशाला
-        आ गेस्ट हाउस स्थित अछि। भविष्यमे मन्दिरक ओरसँ यात्री-निवास निर्माणक
-        योजना सेहो अछि।
-      </p>
-    </div>
-  );
-}
-
-function DurgaPujaPage() {
-  return (
-    <div className="page">
-      <h1>दुर्गा पूजा महोत्सव</h1>
-      <p>
-        दुर्गा महादेव स्थान, हुलास मे शारदीय नवरात्रि दौरान दुर्गा पूजा
-        महोत्सव विशेष रूप सँ भव्य ढंग सँ मनाओल जाइत अछि। कलश स्थापना, घट
-        स्थापना सँ आरम्भ भऽ नवमी, दशमी धरि प्रतिदिन पूजा, पाठ, भजन, प्रवचन
-        आ सांस्कृतिक कार्यक्रम होइत अछि।
-      </p>
-      <p>
-        नवरात्रि दौरान सम्पूर्ण परिसर लाइट, फूल आ विविध सजावट सँ अलोकित
-        रहैत अछि। भक्तजन अपन परिवार संग एहि पुण्य पर्वमे सम्मिलित होइत छथि
-        आ देवीक कृपा प्राप्त करैत छथि।
-      </p>
-    </div>
-  );
-}
-
-function EventsPage() {
-  return (
-    <div className="page">
-      
-      
-    <div className="page">
-      <h1>वार्षिक कार्यक्रम आ आयोजन</h1>
-      <p>मन्दिरमे वर्षभरि आयोजित प्रमुख धार्मिक उत्सव आ कार्यक्रम निम्न प्रकार अछि:</p>
-
-      <ul>
-        <li><strong>जनवरी–फरवरी:</strong> सरस्वती पूजा (माघ, शुक्ल पक्ष पंचमी) – ज्ञान, शिक्षा आ संगीतक आराधना।</li>
-        <li><strong>मार्च–अप्रैल:</strong> राम नवमी (चैत्र, शुक्ल पक्ष नवमी) – भगवान रामक जन्म उत्सव।</li>
-        <li><strong>अप्रैल–मई:</strong> रंगपंचमी / होली – रंग आ खेलक सांस्कृतिक आयोजन।</li>
-        <li><strong>सितम्बर–अक्टूबर:</strong> दुर्गा पूजा महोत्सव (आश्विन, शुक्ल पक्ष सप्तमी–दशमी) – देवी दुर्गाक आराधना आ सांस्कृतिक कार्यक्रम।</li>
-        <li><strong>फाल्गुन (फरवरी–मार्च):</strong> महाशिवरात्रि (कृष्ण पक्ष १४म राति) – भगवान शिवक आराधना आ रात्रि जागरण।</li>
-        <li><strong>सांस्कृतिक आयोजन:</strong> वर्षभरि संगीत, नृत्य, नाटक आ सामुदायिक कार्यक्रम।</li>
-      </ul>
-    </div>
-
-    </div>
-  );
-}
-
-function NewsPage() {
-  return (
-    <div className="page">
-      <h1>समाचार आ सूचना</h1>
-      <p>
-        एतए मन्दिर सँ जुड़ल मुख्य समाचार, विशेष घोषणा, महोत्सवक तिथि, प्रसंग
-        आ अन्य अद्यतन सूचनासभ प्रकाशित कएल जायत। फिलहाल आधारभूत सूचना
-        प्रदर्शित अछि।
-      </p>
-    </div>
-  );
-}
-
-function DonationsPage() {
-  return (
-    <div className="page">
-      <h1>दान संबंधी जानकारी</h1>
-      <p>
-        दुर्गा महादेव स्थानक समुचित संचालन, नव निर्माण, सेवा कार्य, धार्मिक
-        कार्यक्रम, प्रकाश-व्यवस्था, स्वच्छता आ सामाजिक पहलसभ मन्दिरक दान आ
-        सहयोग पर आधारित अछि।
-      </p>
-      <p>वर्तमानमे दान मुख्य रूप सँ नगद अथवा मन्दिर कार्यालय मार्फत स्वीकार होइत अछि।</p>
-      <p>
-        बैंक विवरण, UPI अथवा अन्य माध्यम सँ दानक ऑनलाइन सुविधा निकट भविष्यमे
-        सुरु करबाक योजना अछि। विस्तृत जानकारी लेल मन्दिर प्रबंधन सँ सम्पर्क
-        कएल जा सकैत अछि।
-      </p>
-      
-      <div style={{ textAlign: 'center', margin: '40px 0' }}>
-        <h2 style={{ marginBottom: '30px', color: '#7c1a1a' }}>ऑनलाइन दान करबाक लेल</h2>
-        
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          gap: '30px',
-          padding: '40px',
-          backgroundColor: '#f8f8f8',
-          borderRadius: '15px',
-          border: '2px solid #7c1a1a',
-          maxWidth: '600px',
-          margin: '0 auto'
-        }}>
-          
-          <div style={{ textAlign: 'center' }}>
-            <h3 style={{ marginBottom: '20px', color: '#333' }}>QR Code स्कैन करू</h3>
-            <img 
-              src="/photos/donation/qrcode.jpg" 
-              alt="Donation QR Code" 
-              style={{ 
-                width: "250px", 
-                height: "250px",
-                borderRadius: "15px",
-                border: "3px solid #7c1a1a",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.2)"
-              }}
-            />
-            <p style={{ marginTop: '15px', color: '#666', fontSize: '14px' }}>
-              ऊपर दिएल QR code कें स्कैन कएक दान करू
-            </p>
-          </div>
-          
-          <div style={{ textAlign: 'center', width: '100%' }}>
-            <h3 style={{ marginBottom: '25px', color: '#333', borderBottom: '2px solid #7c1a1a', paddingBottom: '10px' }}>
-              बैंक खाता विवरण
-            </h3>
-            <div style={{ 
-              backgroundColor: 'white', 
-              padding: '25px', 
-              borderRadius: '10px',
-              border: '1px solid #ddd',
-              fontSize: '16px',
-              lineHeight: '1.8'
-            }}>
-              <p style={{ margin: '10px 0', fontWeight: 'bold', color: '#333' }}>
-                <strong>खाता नाम:</strong> Durga Puja Samiti Hulash
-              </p>
-              <p style={{ margin: '10px 0', fontWeight: 'bold', color: '#333' }}>
-                <strong>खाता संख्या:</strong> 458010100002205
-              </p>
-              <p style={{ margin: '10px 0', fontWeight: 'bold', color: '#333' }}>
-                <strong>IFSC कोड:</strong> BKID0004580
-              </p>
-              <p style={{ margin: '10px 0', fontWeight: 'bold', color: '#333' }}>
-                <strong>बैंक:</strong> Bank of India
-              </p>
-            </div>
-          </div>
-          
-          <div style={{ textAlign: 'center', width: '100%' }}>
-            <h3 style={{ marginBottom: '25px', color: '#333', borderBottom: '2px solid #7c1a1a', paddingBottom: '10px' }}>
-              UPI विवरण
-            </h3>
-            <div style={{ 
-              backgroundColor: 'white', 
-              padding: '25px', 
-              borderRadius: '10px',
-              border: '1px solid #ddd',
-              fontSize: '16px',
+ …2526 tokens truncated…            fontSize: '16px',
               lineHeight: '1.8'
             }}>
               <p style={{ margin: '10px 0', fontWeight: 'bold', color: '#333' }}>

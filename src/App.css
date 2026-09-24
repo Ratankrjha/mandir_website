@@ -1946,3 +1946,23 @@ html {
     bottom: 14px;
   }
 }
+
+.audio-status {
+  color: #ffeb3b;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  max-width: 150px;
+}
+
+@media (max-width: 600px) {
+  .audio-status {
+    position: absolute;
+    top: 100%;
+    left: 56px;
+    z-index: 2;
+    padding: 4px 7px;
+    border-radius: 4px;
+    background: #7c1a1a;
+    max-width: calc(100vw - 80px);
+  }
+}
