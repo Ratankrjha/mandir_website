@@ -126,3 +126,41 @@
   opacity: 0.3;
   transform: rotate(15deg);
 }
+@media (max-width: 768px) {
+  .festivals-section {
+    padding: 36px 16px;
+  }
+
+  .festivals-section h2 {
+    font-size: clamp(1.7rem, 7vw, 2.2rem);
+    margin-bottom: 28px;
+  }
+
+  .festival {
+    padding: 22px 18px;
+    margin-bottom: 24px;
+  }
+
+  .festival h3 {
+    font-size: clamp(1.25rem, 5.5vw, 1.6rem);
+    padding-left: 34px;
+    overflow-wrap: anywhere;
+  }
+
+  .festival p {
+    padding: 14px;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 420px) {
+  .festivals-section {
+    padding: 28px 12px;
+  }
+
+  .festival {
+    padding: 18px 14px;
+    border-radius: 12px;
+  }
+}
