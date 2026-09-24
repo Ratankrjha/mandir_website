@@ -42,43 +42,44 @@
 import React, { useState } from "react";
 import "./App.css"; // CSS वही file use karo
 
+const GALLERY_IMAGES = [
+  "/photos/dp1.jpg",
+  "/photos/dp2.jpg",
+  "/photos/newpic1.jpg",
+  "/photos/dp4.jpg",
+  "/photos/dp5.jpg",
+  "/photos/dp6.jpg",
+  "/photos/dp7.jpg",
+  "/photos/dp8.jpg",
+  "/photos/hulas7.jpg",
+  "/photos/hulas1.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/pic1.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/pic2.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_174006.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_174205.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_174730.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175157.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175239.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175252.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175314.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175318.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175919.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_180142.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_181107.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_181125.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_182734.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_190045.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_205051.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/IMG-20241012-WA0007.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/IMG-20241012-WA0009.jpg",
+  "/photos/drive-download-20260307T153529Z-1-001 (1)/IMG-20241012-WA0011.jpg"
+];
+
 function Gallery() {
   const [loading, setLoading] = React.useState(true);
   const [selectedImg, setSelectedImg] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const images = [
-    "/photos/dp1.jpg",
-    "/photos/dp2.jpg",
-    "/photos/newpic1.jpg",
-    "/photos/dp4.jpg",
-    "/photos/dp5.jpg",
-    "/photos/dp6.jpg",
-    "/photos/dp7.jpg",
-    "/photos/dp8.jpg",
-    "/photos/hulas7.jpg",
-    "/photos/hulas1.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/pic1.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/pic2.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_174006.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_174205.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_174730.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175157.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175239.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175252.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175314.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175318.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_175919.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_180142.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_181107.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_181125.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_182734.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_190045.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/20241012_205051.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/IMG-20241012-WA0007.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/IMG-20241012-WA0009.jpg",
-    "/photos/drive-download-20260307T153529Z-1-001 (1)/IMG-20241012-WA0011.jpg"
-  ];
 
   React.useEffect(() => {
     // Simulate loading time
@@ -90,7 +91,7 @@ function Gallery() {
 
   const openLightbox = (index) => {
     setCurrentIndex(index);
-    setSelectedImg(images[index]);
+    setSelectedImg(GALLERY_IMAGES[index]);
   };
 
   const closeLightbox = () => {
@@ -99,31 +100,37 @@ function Gallery() {
   };
 
   const goToPrevious = () => {
-    const newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    const newIndex = currentIndex === 0 ? GALLERY_IMAGES.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
-    setSelectedImg(images[newIndex]);
+    setSelectedImg(GALLERY_IMAGES[newIndex]);
   };
 
   const goToNext = () => {
-    const newIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
+    const newIndex = currentIndex === GALLERY_IMAGES.length - 1 ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
-    setSelectedImg(images[newIndex]);
+    setSelectedImg(GALLERY_IMAGES[newIndex]);
   };
 
-  const handleKeyDown = (e) => {
-    if (!selectedImg) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') goToPrevious();
-    if (e.key === 'ArrowRight') goToNext();
-  };
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!selectedImg) return;
+      if (e.key === 'Escape') {
+        setSelectedImg(null);
+        setCurrentIndex(0);
+      } else if (e.key === 'ArrowLeft') {
+        const newIndex = currentIndex === 0 ? GALLERY_IMAGES.length - 1 : currentIndex - 1;
+        setCurrentIndex(newIndex);
+        setSelectedImg(GALLERY_IMAGES[newIndex]);
+      } else if (e.key === 'ArrowRight') {
+        const newIndex = currentIndex === GALLERY_IMAGES.length - 1 ? 0 : currentIndex + 1;
+        setCurrentIndex(newIndex);
+        setSelectedImg(GALLERY_IMAGES[newIndex]);
+      }
+    };
 
-React.useEffect(() => {
-  window.addEventListener('keydown', handleKeyDown);
-
-  return () => {
-    window.removeEventListener('keydown', handleKeyDown);
-  };
-}, [selectedImg, currentIndex, handleKeyDown]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImg, currentIndex]);
 
   return (
     <div className="gallery">
@@ -133,7 +140,7 @@ React.useEffect(() => {
           <div key={index} className="skeleton skeleton-gallery"></div>
         ))
       ) : (
-        images.map((img, index) => (
+        GALLERY_IMAGES.map((img, index) => (
           <img
             key={index}
             src={img}

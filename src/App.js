@@ -4,6 +4,7 @@ import './App.css';
 import GalleryPage from './Gallery';
 import Festivals from './Festival';
 // {/* <Route path="/festivals" element={<Festivals />} /> */}
+const NEXT_FESTIVAL_DATE = new Date('2026-10-10T06:00:00');
 const NAV_ITEMS = [
   {
     label: 'मुख्य पृष्ठ',
@@ -333,12 +334,11 @@ function FestivalCountdown() {
   });
 
   // Set next major festival (Durga Puja - October 10, 2026)
-  const nextFestival = new Date('2026-10-10T06:00:00');
   const festivalName = 'दुर्गा पूजा महोत्सव';
 
   React.useEffect(() => {
     const calculateTimeLeft = () => {
-      const difference = nextFestival - new Date();
+      const difference = NEXT_FESTIVAL_DATE - new Date();
       
       if (difference > 0) {
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -887,20 +887,6 @@ function AccommodationPage() {
         आ गेस्ट हाउस स्थित अछि। भविष्यमे मन्दिरक ओरसँ यात्री-निवास निर्माणक
         योजना सेहो अछि।
       </p>
-    </div>
-  );
-}
-
-function FestivalsPage() {
-  return (
-    <div className="page">
-      <h1>मुख्य पर्व आ उत्सव</h1>
-      <ul className="bullet-list">
-        <li>शारदीय दुर्गा पूजा – वर्षक सर्वाधिक भव्य उत्सव।</li>
-        <li>महाशिवरात्रि – विशेष रुद्राभिषेक, रात्रि-जागरण आ भजन संध्या।</li>
-        <li>राम नवमी, जन्माष्टमी, सरस्वती पूजा, बसंत पंचमी।</li>
-        <li>नव वर्ष (हिन्दू नववर्ष) पर विशेष पूजा आ आशीर्वाद कार्यक्रम।</li>
-      </ul>
     </div>
   );
 }
