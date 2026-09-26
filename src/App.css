@@ -2039,3 +2039,93 @@ body {
     font-size: 20px;
   }
 }
+@media (max-width: 600px) {
+  .footer-column {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .footer-column h3,
+  .footer-column p {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+  }
+
+  .back-to-top {
+    right: 15px;
+  }
+}
+
+
+
+
+@media (max-width: 600px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+}
+
+
+/* Footer responsive fix */
+@media (max-width: 900px) {
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+
+  .footer-column {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .footer-map-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .footer-map-wrapper iframe {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-main {
+    grid-template-columns: 1fr;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    gap: 20px;
+  }
+
+  .footer-column {
+    width: 100%;
+    min-width: 0;
+  }
+}
