@@ -1792,11 +1792,11 @@ function Footer() {
     <FaFacebook />
   </a>
 
-  <a href="https://www.instagram.com/_mahadev_sthan_hulash/" target="_blank" aria-label="Instagram">
+  <a href="https://www.instagram.com/_mahadev_sthan_hulash/" target="_blank" aria-label="Instagram" rel="noopener noreferrer">
     <FaInstagram />
   </a>
 
-  <a href="https://www.youtube.com/@DurgaMahadevSthanHulas" target="_blank" aria-label="YouTube">
+  <a href="https://www.youtube.com/@DurgaMahadevSthanHulas" target="_blank" aria-label="YouTube" rel="noopener noreferrer"> 
     <FaYoutube />
   </a>
 </div>
